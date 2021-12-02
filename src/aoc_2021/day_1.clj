@@ -3,7 +3,6 @@
 
 (def input (map read-string (str/split (slurp "resources/day-1-input.txt")
                       #"\n")))
-
 (defn times-increased 
   ([measurements]
    (times-increased measurements 0 nil))
@@ -28,8 +27,8 @@
                                                                             (nth measurements 2)))
        (times-increased-window-3 (rest measurements) current-count (+ (nth measurements 0)
                                                                       (nth measurements 1)
-                                                                      (nth measurements 2)))))))
+                                                                        (nth measurements 2)))))))
 
-     (times-increased-window-3 [199 200 208 210 200 207 240 269 260 263])
+(times-increased-window-3 [199 200 208 210 200 207 240 269 260 263])
 (times-increased-window-3 input)
 
