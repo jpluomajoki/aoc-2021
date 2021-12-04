@@ -4,7 +4,7 @@
 (def testinput (read-test-input "00100\n11110\n10110\n10111\n10101\n01111\n00111\n11100\n10000\n11001\n00010\n01010\n"))
 
 (defn get-count-of-bits [reports]
-  (map frequencies (mapv (fn [idx] (map (fn [report] (nth report idx)) reports)) (range (count (first reports))))))
+  (map #(into (sorted-map) %) (map frequencies (mapv (fn [idx] (map (fn [report] (nth report idx)) reports)) (range (count (first reports)))))))
 
 (defn get-most-common-bits [counts]
   (apply str (map (fn [count]
@@ -20,7 +20,6 @@
 (defn filter-by-bit-in-pos [reports pos bit]
   (filter (fn [report]
            (= (nth report pos) bit)) reports))
-
 
 (defn part-1 [input]
   (let [counts (get-count-of-bits input)
@@ -45,15 +44,10 @@
             (filter-by-bit-in-pos co2 idx (nth c-lcbs idx)) 
             (inc idx))))))
 
-
-
 ;; Part 1
 (part-1 testinput)
 (part-1 (read-input "resources/day-3-input.txt"))
 
 ;; Part 2
-(filter #(= (nth % 0) \0) testinput)
-(filter-by-bit-in-pos testinput 0 \0)
-
 (part-2 testinput)
 (part-2 (read-input "resources/day-3-input.txt"))
