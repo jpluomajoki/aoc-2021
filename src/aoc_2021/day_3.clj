@@ -12,20 +12,48 @@
 
 (defn get-least-common-bits [counts]
   (apply str (map (fn [count]
-        (key (apply min-key val count))) counts)))
+        (key (apply min-key val (into {} (reverse count))))) counts)))
 
 (defn bits-to-int [bits]
   (read-string (str "2r" bits)))
+
+(defn filter-by-bit-in-pos [reports pos bit]
+  (filter (fn [report]
+           (= (nth report pos) bit)) reports))
+
 
 (defn part-1 [input]
   (let [counts (get-count-of-bits input)
         mcbs (get-most-common-bits counts)
         lcbs (get-least-common-bits counts)
         mcb-int (bits-to-int mcbs)
-        lcb-int (bits-to-int lcbs)
-        ]
-    (* mcb-int lcb-int) 
-  ))
+        lcb-int (bits-to-int lcbs)]
+    (* mcb-int lcb-int)))
 
+(defn part-2 [input]
+  (loop [oxygen input
+         co2 input
+         idx 0]
+    (let [o-counts (get-count-of-bits oxygen)
+          o-mcbs (into [] (get-most-common-bits o-counts)) 
+          c-counts (get-count-of-bits co2)
+          c-lcbs (into [] (get-least-common-bits c-counts))]
+      (if (and (= 1 (count oxygen)) (= 1 (count co2)))
+        (* (bits-to-int (first oxygen)) (bits-to-int (first co2)))
+        (recur
+            (filter-by-bit-in-pos oxygen idx (nth o-mcbs idx)) 
+            (filter-by-bit-in-pos co2 idx (nth c-lcbs idx)) 
+            (inc idx))))))
+
+
+
+;; Part 1
 (part-1 testinput)
 (part-1 (read-input "resources/day-3-input.txt"))
+
+;; Part 2
+(filter #(= (nth % 0) \0) testinput)
+(filter-by-bit-in-pos testinput 0 \0)
+
+(part-2 testinput)
+(part-2 (read-input "resources/day-3-input.txt"))
