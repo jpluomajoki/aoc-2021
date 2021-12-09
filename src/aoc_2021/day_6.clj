@@ -5,7 +5,7 @@
 (def testinput ["3,4,3,1,2"])
 
 (defn get-fishes [input]
-  (str/split (first input) #"\,"))
+  (map read-string (str/split (first input) #"\,")))
 
 (defn part-1 [input]
   (let [fishes (map read-string (str/split (first input) #"\,"))]
@@ -20,6 +20,24 @@
         (recur fishes
                (dec days)))))))) 
 
-(part-1 testinput)
+(defn part-2 [input]
+  (let [fishes (get-fishes input)
+        days 80]
+    (loop [days 256
+           fishes (into {} (map (fn [[k v]] {k (count v)}) (group-by identity fishes)))]
+      (if (= 0 days)
+        (apply + (vals fishes))
+        (recur (dec days)
+               {0 (get fishes 1) 
+                1 (get fishes 2)
+                2 (get fishes 3)
+                3 (get fishes 4)
+                4 (get fishes 5)
+                5 (get fishes 6)
+                6 (+ (or (get fishes 7) 0) (or (get fishes 0) 0))
+                7 (get fishes 8)
+                8 (get fishes 0)})))))
+
 (part-1 (read-input "resources/day-6-input.txt"))
+(part-2 (read-input "resources/day-6-input.txt"))
 
